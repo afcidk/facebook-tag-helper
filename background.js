@@ -1,4 +1,6 @@
 var message="";
+var url="";
+//show startup.html when first installed
 chrome.runtime.onInstalled.addListener(function (object){
     if(object.reason === "install"){
         chrome.tabs.create({url: "./startup.html"}, function (tab){
@@ -7,26 +9,40 @@ chrome.runtime.onInstalled.addListener(function (object){
     }
 });
 
+//onClick icon
 chrome.browserAction.onClicked.addListener(function (tab){
 
     chrome.tabs.executeScript(null, {
         file: "getPage.js"
     }, function() {
+        
+        chrome.tabs.query({"active": true, "status": "complete"}, function (tab){
+            url = tab[0].url;
+        });
+        
         if(chrome.runtime.lastError){
-            console.log("Error when injecting script");
-            chrome.notifications.create({type: "basic", iconUrl: "./icon64.png", title: "Fail", message: "錯誤/找不到頁面，正確網址應該長這樣: https://www.facebook.com/groups/123456789111/members/"});
+            console.log(chrome.runtime.lastError);
+            printErrorMessage();
         }
     });
-
-
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender){
     if(request.action == "getSource") {
+        var arr = "";
         message = "";
         var dum = document.createElement("html");
+        
         dum.innerHTML = request.source;
-        var arr = dum.getElementsByClassName("fsl fwb fcb");
+        if(url.length>=32 && url.substring(0, 32)==="https://www.facebook.com/groups/"){
+            //catch club page(url)
+            arr = dum.getElementsByClassName("fsl fwb fcb");
+        }
+        else if(url.length>=36 && url.substring(0, 36)==="https://www.facebook.com/messages/t/"){
+            //catch group page(url)
+            arr = dum.getElementsByClassName("_364g");
+        }
+        
         var record = [];
         for(var i=0; i<arr.length; i++){
             var text = arr[i].innerText.split(" ")[0];
@@ -43,12 +59,8 @@ chrome.runtime.onMessage.addListener(function (request, sender){
             record.push(text)
         }
     }
-    if(message == ""){
-        chrome.notifications.create({type: "basic", iconUrl: "./icon64.png", title: "Fail", message: "錯誤/找不到頁面，正確網址應該長這樣: https://www.facebook.com/groups/123456789111/members/"});
-    }  
-    else{
-        cpyText();
-    }
+    if(message == "")   printErrorMessage();
+    else  cpyText();
 });
 
 
@@ -65,3 +77,8 @@ function cpyText(){
     document.body.removeChild(dum);
     chrome.notifications.create({type: "basic", iconUrl: "./icon64.png", title: "Success", message: "複製成功!"});
 };
+
+function printErrorMessage(){
+    chrome.notifications.create({type: "basic", iconUrl: "./icon64.png", title: "Fail", message: "錯誤/找不到頁面，正確網址應該以          https://www.facebook.com/groups/ 或是 https://www.facebook.com/messages/t/ 開頭喔^^"});
+    
+}
