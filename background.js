@@ -11,14 +11,14 @@ chrome.runtime.onInstalled.addListener(function (object){
 
 //onClick icon
 chrome.browserAction.onClicked.addListener(function (tab){
+        
+    chrome.tabs.query({"active": true, "status": "complete"}, function (tab){
+        url = tab[0].url;
+    });
 
     chrome.tabs.executeScript(null, {
         file: "getPage.js"
     }, function() {
-        
-        chrome.tabs.query({"active": true, "status": "complete"}, function (tab){
-            url = tab[0].url;
-        });
         
         if(chrome.runtime.lastError){
             console.log(chrome.runtime.lastError);
@@ -32,6 +32,7 @@ chrome.runtime.onMessage.addListener(function (request, sender){
         var arr = "";
         message = "";
         var dum = document.createElement("html");
+        console.log(url);
         
         dum.innerHTML = request.source;
         if(url.length>=32 && url.substring(0, 32)==="https://www.facebook.com/groups/"){
