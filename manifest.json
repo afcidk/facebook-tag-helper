@@ -11,9 +11,15 @@
         "chrome_style": true
     },
     "background": {
-        "scripts": ["background.js"],
+        "scripts": ["background.js", "thirdParty/jquery-3.3.1.slim.min.js"],
         "persistent": false
     },
+	"content_scripts": [
+		{
+			"matches": ["http://www.facebook.com/*", "https://www.facebook.com/*"],
+			"js": ["thirdParty/jquery-3.3.1.slim.min.js", "contentScript.js"]
+		}
+	],
 
-    "permissions": ["tabs", "clipboardWrite", "<all_urls>", "notifications"]
+    "permissions": ["tabs", "clipboardWrite", "notifications", "http://www.facebook.com/*", "https://www.facebook.com/*"]
 }
