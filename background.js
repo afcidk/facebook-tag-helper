@@ -9,7 +9,7 @@ chrome.runtime.onInstalled.addListener(function (object){
 
 //onClick icon, run contentScript
 chrome.browserAction.onClicked.addListener(function (tab){
-        
+	console.log("wil execute");
     chrome.tabs.executeScript(null, {
 		file: "contentScript.js"
     }, function() {

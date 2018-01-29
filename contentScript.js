@@ -1,17 +1,15 @@
-path = window.location.pathname;
-match_str = ["/groups/[0-9]{15}/"];
-add_str = ["members"];
+var path = window.location.pathname;
+var match_str = ["/groups/([0-9]*?)/"];
+var add_str = ["members"];
 
 match_str.forEach(function(value, index){
 	mat = path.match(value);
 	if(mat != null){
 		console.log(path)
 		if(mat[0] === path){
-			console.log("will change");
 			window.location.replace(path+"members/");
 			path = window.location.pathname;
 		}
-		$(document).scrollTop(document.height);
 		getPage(null);
 		return ;
 	}
