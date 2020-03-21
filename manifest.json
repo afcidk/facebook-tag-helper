@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Facebook tag Helper",
     "description": "Helps automatically add @ of people in group/club member pages",
-    "version": "1.3.1",
+    "version": "0.0.1",
     "browser_action": {
         "default_icon": "icon64.png"
     },
@@ -11,15 +11,8 @@
         "chrome_style": true
     },
     "background": {
-        "scripts": ["background.js", "thirdParty/jquery-3.3.1.slim.min.js"],
+        "scripts": ["background.js"],
         "persistent": false
     },
-	"content_scripts": [
-		{
-			"matches": ["http://www.facebook.com/*", "https://www.facebook.com/*"],
-			"js": ["thirdParty/jquery-3.3.1.slim.min.js"]
-		}
-	],
-
     "permissions": ["tabs", "clipboardWrite", "notifications", "http://www.facebook.com/*", "https://www.facebook.com/*"]
 }
